@@ -211,7 +211,7 @@ export const assignConversationToAgent = internalMutation({
       });
 
       // Auto-detect busy status after assignment
-      await ctx.runMutation(exports.autoDetectBusyStatus, {
+      await ctx.runMutation(internal.system.agentStatus.autoDetectBusyStatus, {
         organizationId: conversation.organizationId,
         agentId: args.agentId,
       });
@@ -250,7 +250,7 @@ export const removeConversationFromAgent = internalMutation({
       });
 
       // Auto-detect status change after removing conversation
-      await ctx.runMutation(exports.autoDetectBusyStatus, {
+      await ctx.runMutation(internal.system.agentStatus.autoDetectBusyStatus, {
         organizationId: args.organizationId,
         agentId: args.agentId,
       });

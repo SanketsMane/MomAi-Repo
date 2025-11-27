@@ -4,6 +4,7 @@ import { supportAgent } from "../system/ai/agents/supportAgent";
 import { MessageDoc } from "@convex-dev/agent";
 import { paginationOptsValidator, PaginationResult } from "convex/server";
 import { Doc } from "../_generated/dataModel";
+import { internal } from "../_generated/api";
 
 export const updateStatus = mutation({
   args: {
@@ -237,5 +238,63 @@ export const getByAgent = query({
     );
 
     return conversationsWithDetails;
+  },
+});
+
+// Assign conversation to agent
+export const assignToAgent = mutation({
+  args: {
+    conversationId: v.id("conversations"),
+    agentId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (identity === null) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "Identity not found",
+      });
+    }
+
+    const orgId = identity.orgId as string;
+
+    if (!orgId) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "Organization not found",
+      });
+    }
+
+    const conversation = await ctx.db.get(args.conversationId);
+
+    if (!conversation) {
+      throw new ConvexError({
+        code: "NOT_FOUND",
+        message: "Conversation not found"
+      });
+    }
+
+    if (conversation.organizationId !== orgId) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "Invalid Organization ID",
+      });
+    }
+
+    // Update conversation with assigned agent
+    await ctx.db.patch(args.conversationId, {
+      assignedAgentId: args.agentId,
+      status: "escalated" as const,
+      escalatedAt: Date.now(),
+    });
+
+    // Run the internal mutation to update agent status
+    await ctx.runMutation(internal.system.agentStatus.assignConversationToAgent, {
+      conversationId: args.conversationId,
+      agentId: args.agentId,
+    });
+
+    return { success: true };
   },
 });

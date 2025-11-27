@@ -15,7 +15,7 @@ export const ConversationStatusButton = ({
   if (status === "resolved") {
     return (
       <Hint text="Mark as unresolved">
-        <Button disabled={disabled} onClick={onClick} size="sm" variant="tertiary">
+        <Button disabled={disabled} onClick={onClick} size="sm" variant="secondary">
           <CheckIcon />
           Resolved
         </Button>
@@ -26,7 +26,7 @@ export const ConversationStatusButton = ({
   if (status === "escalated") {
     return (
       <Hint text="Mark as resolved">
-        <Button disabled={disabled} onClick={onClick} size="sm" variant="warning">
+        <Button disabled={disabled} onClick={onClick} size="sm" variant="outline">
           <ArrowUpIcon />
           Escalated
         </Button>

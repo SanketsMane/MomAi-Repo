@@ -4,7 +4,18 @@ const nextConfig = {
   transpilePackages: ["@workspace/ui"],
   devIndicators: false,
   output: 'standalone',
-  outputFileTracingRoot: '/Users/sanket/Documents/CHATBOT-MOM'
+  outputFileTracingRoot: '/Users/sanket/Documents/CHATBOT-MOM',
+  
+  // Webpack configuration for better stability
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+      }
+    }
+    return config
+  }
 }
 
 export default withSentryConfig(nextConfig, {

@@ -7,6 +7,7 @@ import { contactSessionIdAtomFamily, errorMessageAtom, loadingMessageAtom, organ
 import { WidgetHeader } from "@/modules/widget/ui/components/widget-header";
 import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "@workspace/backend/_generated/api";
+import { cleanupInvalidContactSessionId } from "@/modules/widget/utils/id-validation";
 
 type InitStep = "org" | "session" | "settings" | "vapi" | "done";
 
@@ -21,6 +22,7 @@ export const WidgetLoadingScreen = ({ organizationId }: { organizationId: string
   const setErrorMessage = useSetAtom(errorMessageAtom);
   const setScreen = useSetAtom(screenAtom);
   const setVapiSecrets = useSetAtom(vapiSecretsAtom);
+  const setContactSessionId = useSetAtom(contactSessionIdAtomFamily(organizationId || ""));
 
   const contactSessionId = useAtomValue(contactSessionIdAtomFamily(organizationId || ""));
 
@@ -81,6 +83,13 @@ export const WidgetLoadingScreen = ({ organizationId }: { organizationId: string
       return;
     }
 
+    // Clean up invalid contact session IDs
+    if (cleanupInvalidContactSessionId(contactSessionId, () => setContactSessionId(null))) {
+      setSessionValid(false);
+      setStep("settings");
+      return;
+    }
+
     setLoadingMessage("Validating session...");
 
     validateContactSession({ contactSessionId })
@@ -88,11 +97,17 @@ export const WidgetLoadingScreen = ({ organizationId }: { organizationId: string
         setSessionValid(result.valid);
         setStep("settings");
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error('Contact session validation failed:', error);
+        // If validation fails due to wrong ID type, clear the session
+        if (error.message?.includes('ArgumentValidationError')) {
+          console.warn('Clearing invalid contact session ID due to validation error');
+          setContactSessionId(null);
+        }
         setSessionValid(false);
         setStep("settings");
       })
-  }, [step, contactSessionId, validateContactSession, setLoadingMessage]);
+  }, [step, contactSessionId, validateContactSession, setLoadingMessage, setContactSessionId]);
 
   // Step 3: Load Widget Settings
   const widgetSettings = useQuery(api.public.widgetSettings.getByOrganizationId, 
