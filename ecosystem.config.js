@@ -2,38 +2,37 @@ module.exports = {
   apps: [
     {
       name: 'mom-ai-web',
-      script: 'npm',
+      script: 'pnpm',
       args: 'start',
-      cwd: './apps/web',
+      cwd: '/var/www/mom-ai/apps/web',
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G',
       env: {
         NODE_ENV: 'production',
         PORT: 3000
       },
+      error_file: '/var/log/pm2/mom-ai-web-error.log',
+      out_file: '/var/log/pm2/mom-ai-web-out.log',
+      log_file: '/var/log/pm2/mom-ai-web.log'
+    },
+    {
+      name: 'mom-ai-widget',
+      script: 'pnpm',
+      args: 'start',
+      cwd: '/var/www/mom-ai/apps/widget',
       instances: 1,
       autorestart: true,
       watch: false,
       max_memory_restart: '1G',
-      error_file: './logs/web-error.log',
-      out_file: './logs/web-out.log',
-      log_file: './logs/web-combined.log',
-      time: true
-    },
-    {
-      name: 'mom-ai-widget',
-      script: 'npm',
-      args: 'start',
-      cwd: './apps/widget',
       env: {
         NODE_ENV: 'production',
         PORT: 4000
       },
-      instances: 1,
-      autorestart: true,
-      watch: false,
-      max_memory_restart: '1G',
-      error_file: './logs/widget-error.log',
-      out_file: './logs/widget-out.log',
-      log_file: './logs/widget-combined.log',
+      error_file: '/var/log/pm2/mom-ai-widget-error.log',
+      out_file: '/var/log/pm2/mom-ai-widget-out.log',
+      log_file: '/var/log/pm2/mom-ai-widget.log',
       time: true
     }
   ]
