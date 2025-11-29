@@ -150,7 +150,7 @@ export const WidgetChatScreen = () => {
           <Button
             onClick={onBack}
             size="icon"
-            variant="transparent"
+            variant="ghost"
           >
             <ArrowLeftIcon />
           </Button>
@@ -158,7 +158,7 @@ export const WidgetChatScreen = () => {
         </div>
         <Button
           size="icon"
-          variant="transparent"
+          variant="ghost"
         >
           <MenuIcon />
         </Button>
