@@ -11,6 +11,8 @@ import { useState } from "react";
 import { WidgetFooter } from "../components/widget-footer";
 import { GreetingPopup } from "@/modules/widget/ui/components/greeting-popup";
 import { useGreetingPopup } from "@/hooks/use-greeting-popup";
+import { useNotificationSound } from "@/hooks/use-notification-sound";
+import { notificationSettingsAtomFamily } from "../../atoms/widget-atoms";
 
 export const WidgetSelectionScreen = () => {
   const setScreen = useSetAtom(screenAtom);
@@ -23,6 +25,13 @@ export const WidgetSelectionScreen = () => {
   const contactSessionId = useAtomValue(
     contactSessionIdAtomFamily(organizationId || "")
   );
+  
+  // Notification settings
+  const notificationSettings = useAtomValue(notificationSettingsAtomFamily(organizationId || ""));
+  const { playNewChat } = useNotificationSound({ 
+    enabled: notificationSettings.soundEnabled, 
+    volume: notificationSettings.volume 
+  });
 
   const createConversation = useMutation(api.public.conversations.create);
   const [isPending, setIsPending] = useState(false);
@@ -49,6 +58,9 @@ export const WidgetSelectionScreen = () => {
         organizationId,
       });
 
+      // Play new chat sound
+      playNewChat();
+      
       setConversationId(conversationId);
       setScreen("chat");
     } catch {

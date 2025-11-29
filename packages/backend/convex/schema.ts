@@ -111,4 +111,22 @@ export default defineSchema({
     .index("by_type", ["type"])
     .index("by_created_at", ["createdAt"])
     .index("by_created_by", ["createdBy"]),
+  userApprovals: defineTable({
+    userId: v.string(), // Clerk user ID
+    email: v.string(),
+    name: v.string(),
+    phone: v.optional(v.string()),
+    role: v.union(v.literal("User"), v.literal("Super Admin")),
+    status: v.union(v.literal("Pending"), v.literal("Active"), v.literal("Rejected")),
+    registeredDate: v.number(),
+    approvedDate: v.optional(v.number()),
+    approvedBy: v.optional(v.string()), // Admin user ID who approved/rejected
+    rejectionReason: v.optional(v.string()),
+    lastLoginAt: v.number(),
+    lastUpdated: v.number(),
+  })
+    .index("by_user_id", ["userId"])
+    .index("by_email", ["email"])
+    .index("by_status", ["status"])
+    .index("by_registered_date", ["registeredDate"]),
 });

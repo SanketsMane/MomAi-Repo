@@ -1,6 +1,8 @@
 "use client";
 
-import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+import { OrganizationSwitcher, UserButton, useUser } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "@workspace/backend/_generated/api";
 import {
   InboxIcon,
   LayoutDashboardIcon,
@@ -9,6 +11,7 @@ import {
   PaletteIcon,
   Settings,
   Database,
+  UserCheck,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -70,10 +73,22 @@ const adminItems = [
     url: "/dashboard/admin/common-knowledge-base",
     icon: Database,
   },
+  {
+    title: "Approvals",
+    url: "/dashboard/approvals",
+    icon: UserCheck,
+  },
 ];
 
 export const DashboardSidebar = () => {
   const pathname = usePathname();
+  const { user } = useUser();
+  
+  // Check if user is Super Admin
+  const isSuperAdmin = useQuery(
+    api.public.userApprovals.isSuperAdmin,
+    user?.primaryEmailAddress?.emailAddress ? { email: user.primaryEmailAddress.emailAddress } : "skip"
+  );
 
   const isActive = (url: string) => {
     if (url === "/") {
@@ -166,23 +181,30 @@ export const DashboardSidebar = () => {
           <SidebarGroupLabel>Admin</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {adminItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={isActive(item.url)}
-                    className={cn(
-                      isActive(item.url) && "bg-gradient-to-b from-sidebar-primary to-[#0b63f3]! text-sidebar-primary-foreground! hover:to-[#0b63f3]/90!"
-                    )}
-                    tooltip={item.title}
-                  >
-                    <Link href={item.url}>
-                      <item.icon className="size-4" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {adminItems.map((item) => {
+                // Hide Approvals for non-Super Admin users
+                if (item.title === "Approvals" && !isSuperAdmin) {
+                  return null;
+                }
+                
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive(item.url)}
+                      className={cn(
+                        isActive(item.url) && "bg-gradient-to-b from-sidebar-primary to-[#0b63f3]! text-sidebar-primary-foreground! hover:to-[#0b63f3]/90!"
+                      )}
+                      tooltip={item.title}
+                    >
+                      <Link href={item.url}>
+                        <item.icon className="size-4" />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

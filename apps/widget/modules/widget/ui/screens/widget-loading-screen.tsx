@@ -36,7 +36,7 @@ export const WidgetLoadingScreen = ({ organizationId }: { organizationId: string
     setLoadingMessage("Finding organization ID...");
 
     if (!organizationId) {
-      setErrorMessage("Organization ID is required");
+      setErrorMessage("Welcome to MOM AI Assistant! Please provide an organization ID to get started.");
       setScreen("error");
       return;
     }

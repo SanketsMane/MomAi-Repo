@@ -1,3 +1,4 @@
+import '../lib/suppress-dev-warnings'
 import { type Metadata } from 'next'
 import {
   ClerkProvider,

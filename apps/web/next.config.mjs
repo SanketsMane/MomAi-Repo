@@ -6,12 +6,25 @@ const nextConfig = {
   output: 'standalone',
   outputFileTracingRoot: '/Users/sanket/Documents/CHATBOT-MOM',
   
+  // Suppress React DevTools warnings in development
+  reactStrictMode: false,
+  
+  // Additional experimental flags to suppress warnings
+  experimental: {
+    suppressHydrationWarning: true,
+  },
+  
   // Webpack configuration for better stability
   webpack: (config, { dev }) => {
     if (dev) {
       config.watchOptions = {
         poll: 1000,
         aggregateTimeout: 300,
+      }
+      
+      // Additional dev optimizations to reduce warnings
+      config.infrastructureLogging = {
+        level: 'error',
       }
     }
     return config

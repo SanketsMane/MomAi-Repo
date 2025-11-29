@@ -1,7 +1,9 @@
 import { AuthGuard } from "@/modules/auth/ui/components/auth-guard"
 import { OrganizationGuard } from "@/modules/auth/ui/components/organization-guard"
+import { ApprovalGuard } from "@/components/approval-guard"
 import { DashboardSidebar } from "@/modules/dashboard/ui/components/dashboard-sidebar";
-import { SidebarProvider } from "@workspace/ui/components/sidebar";
+import { DashboardHeader } from "@/modules/dashboard/ui/components/dashboard-header";
+import { SidebarProvider, SidebarInset } from "@workspace/ui/components/sidebar";
 import { Provider } from "jotai";
 import { cookies } from "next/headers";
 import { Providers } from "@/components/providers";
@@ -14,16 +16,21 @@ export const DashboardLayout = async ({ children }: { children: React.ReactNode 
   return (
     <Providers>
       <AuthGuard>
-        <OrganizationGuard>
-          <Provider>
-            <SidebarProvider defaultOpen={defaultOpen}>
-              <DashboardSidebar />
-              <main className="flex flex-1 flex-col">
-                {children}
-              </main>
-            </SidebarProvider>
-          </Provider>
-        </OrganizationGuard>
+        <ApprovalGuard>
+          <OrganizationGuard>
+            <Provider>
+              <SidebarProvider defaultOpen={defaultOpen}>
+                <DashboardSidebar />
+                <SidebarInset>
+                  <DashboardHeader />
+                  <main className="flex flex-1 flex-col p-4 pt-0">
+                    {children}
+                  </main>
+                </SidebarInset>
+              </SidebarProvider>
+            </Provider>
+          </OrganizationGuard>
+        </ApprovalGuard>
       </AuthGuard>
     </Providers>
   );

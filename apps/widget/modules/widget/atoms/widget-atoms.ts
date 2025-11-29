@@ -19,3 +19,11 @@ export const vapiSecretsAtom = atom<{
 } | null>(null);
 export const hasVapiSecretsAtom = atom((get) => get(vapiSecretsAtom) !== null);
 
+// Notification settings
+export const notificationSettingsAtomFamily = atomFamily((organizationId: string) => {
+  return atomWithStorage(`notification_settings_${organizationId}`, {
+    soundEnabled: true,
+    volume: 0.5,
+  });
+});
+

@@ -2,12 +2,25 @@
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
   
+  // Suppress React DevTools warnings in development
+  reactStrictMode: false,
+  
+  // Additional experimental flags
+  experimental: {
+    // Add valid experimental flags here if needed
+  },
+  
   // Webpack configuration for better stability
   webpack: (config, { dev }) => {
     if (dev) {
       config.watchOptions = {
         poll: 1000,
         aggregateTimeout: 300,
+      }
+      
+      // Additional dev optimizations to reduce warnings
+      config.infrastructureLogging = {
+        level: 'error',
       }
     }
     return config

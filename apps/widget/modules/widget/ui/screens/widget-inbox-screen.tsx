@@ -3,7 +3,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { formatDistanceToNow } from "date-fns";
 import { ArrowLeftIcon } from "lucide-react";
-import { contactSessionIdAtomFamily, conversationIdAtom, organizationIdAtom, screenAtom } from "@/modules/widget/atoms/widget-atoms";
+import { contactSessionIdAtomFamily, conversationIdAtom, organizationIdAtom, screenAtom, notificationSettingsAtomFamily } from "@/modules/widget/atoms/widget-atoms";
 import { ConversationStatusIcon } from "@workspace/ui/components/conversation-status-icon";
 import { WidgetHeader } from "@/modules/widget/ui/components/widget-header";
 import { WidgetFooter } from "../components/widget-footer";
@@ -12,15 +12,28 @@ import { usePaginatedQuery } from "convex/react";
 import { api } from "@workspace/backend/_generated/api";
 import { useInfiniteScroll } from "@workspace/ui/hooks/use-infinite-scroll";
 import { InfiniteScrollTrigger } from "@workspace/ui/components/infinite-scroll-trigger";
+import { useNotificationSound } from "@/hooks/use-notification-sound";
+import { useEffect, useRef } from "react";
 
 export const WidgetInboxScreen = () => {
   const setScreen = useSetAtom(screenAtom);
   const setConversationId = useSetAtom(conversationIdAtom);
-
+  
   const organizationId = useAtomValue(organizationIdAtom);
   const contactSessionId = useAtomValue(
     contactSessionIdAtomFamily(organizationId || "")
   );
+
+  // Notification settings
+  const notificationSettings = useAtomValue(notificationSettingsAtomFamily(organizationId || ""));
+  
+  // Notification sound for inbox updates
+  const { playNewChat, playIncoming } = useNotificationSound({ 
+    enabled: notificationSettings.soundEnabled, 
+    volume: notificationSettings.volume 
+  });
+  const previousConversationCountRef = useRef(0);
+  const hasUserInteractedRef = useRef(false);
 
   const conversations = usePaginatedQuery(
     api.public.conversations.getMany,
@@ -39,6 +52,41 @@ export const WidgetInboxScreen = () => {
     loadMore: conversations.loadMore,
     loadSize: 10,
   });
+  
+  // Track user interaction to enable sound notifications
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      hasUserInteractedRef.current = true;
+    };
+    
+    document.addEventListener('click', handleUserInteraction, { once: true });
+    document.addEventListener('keydown', handleUserInteraction, { once: true });
+    
+    return () => {
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+    };
+  }, []);
+  
+  // Play notification sound for inbox updates
+  useEffect(() => {
+    if (!conversations?.results) return;
+    
+    const currentConversationCount = conversations.results.length;
+    
+    // Play sound if there are new conversations and user has interacted
+    if (
+      hasUserInteractedRef.current &&
+      currentConversationCount > previousConversationCountRef.current &&
+      previousConversationCountRef.current > 0 // Not initial load
+    ) {
+      setTimeout(() => {
+        playNewChat(); // Use new conversation sound
+      }, 100);
+    }
+    
+    previousConversationCountRef.current = currentConversationCount;
+  }, [conversations?.results, playNewChat]);
 
   return (
     <>

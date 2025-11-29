@@ -12,7 +12,7 @@ import { ArrowLeftIcon, MenuIcon } from "lucide-react";
 import { DicebearAvatar } from "@workspace/ui/components/dicebear-avatar";
 import { useInfiniteScroll } from "@workspace/ui/hooks/use-infinite-scroll";
 import { InfiniteScrollTrigger } from "@workspace/ui/components/infinite-scroll-trigger";
-import { contactSessionIdAtomFamily, conversationIdAtom, organizationIdAtom, screenAtom, widgetSettingsAtom } from "../../atoms/widget-atoms";
+import { contactSessionIdAtomFamily, conversationIdAtom, organizationIdAtom, screenAtom, widgetSettingsAtom, notificationSettingsAtomFamily } from "../../atoms/widget-atoms";
 import { useAction, useQuery } from "convex/react";
 import { api } from "@workspace/backend/_generated/api";
 import { Form, FormField } from "@workspace/ui/components/form";
@@ -33,9 +33,11 @@ import {
   AIMessageContent,
 } from "@workspace/ui/components/ai/message";
 import { AIResponse } from "@workspace/ui/components/ai/response";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { ThinkingAnimation } from "@/modules/widget/ui/components/thinking-animation";
 import { QueueStatus, EscalationStatus } from "@/modules/widget/ui/components/queue-status";
+import { useNotificationSound } from "@/hooks/use-notification-sound";
+import { NotificationSettings } from "@/modules/widget/ui/components/notification-settings";
 
 const formSchema = z.object({
   message: z.string().min(1, "Message is required"),
@@ -54,6 +56,20 @@ export const WidgetChatScreen = () => {
 
   // AI thinking state
   const [isThinking, setIsThinking] = useState(false);
+  
+  // Visual notification indicator
+  const [showNotificationPing, setShowNotificationPing] = useState(false);
+  
+  // Notification settings
+  const notificationSettings = useAtomValue(notificationSettingsAtomFamily(organizationId || ""));
+  
+  // Notification sound system with multiple sound types
+  const { playIncoming, playOutgoing, playTyping, playError } = useNotificationSound({ 
+    enabled: notificationSettings.soundEnabled, 
+    volume: notificationSettings.volume 
+  });
+  const previousMessageCountRef = useRef(0);
+  const hasUserInteractedRef = useRef(false);
 
   const onBack = () => {
     setConversationId(null);
@@ -122,10 +138,67 @@ export const WidgetChatScreen = () => {
 
   const createMessage = useAction(api.public.messages.create);
   
+  // Track user interaction to enable sound notifications
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      hasUserInteractedRef.current = true;
+    };
+    
+    document.addEventListener('click', handleUserInteraction, { once: true });
+    document.addEventListener('keydown', handleUserInteraction, { once: true });
+    
+    return () => {
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+    };
+  }, []);
+  
+  // Play notification sound for new assistant messages
+  useEffect(() => {
+    if (!messages.results) return;
+    
+    const uiMessages = toUIMessages(messages.results);
+    if (!uiMessages) return;
+    
+    const currentMessageCount = uiMessages.length;
+    const assistantMessages = uiMessages.filter(msg => msg.role === 'assistant');
+    
+    // Only play sound if:
+    // 1. User has interacted with the page (browser policy)
+    // 2. We have more messages than before
+    // 3. It's not the initial load
+    if (
+      hasUserInteractedRef.current &&
+      currentMessageCount > previousMessageCountRef.current &&
+      previousMessageCountRef.current > 0 // Not initial load
+    ) {
+      // Determine which sound to play based on the latest message
+      const latestMessage = uiMessages[uiMessages.length - 1];
+      
+      // Small delay to ensure message is displayed
+      setTimeout(() => {
+        if (latestMessage?.role === 'assistant') {
+          playIncoming(); // AI response
+          // Show visual notification ping
+          setShowNotificationPing(true);
+          setTimeout(() => setShowNotificationPing(false), 2000);
+        }
+      }, 100);
+    }
+    
+    previousMessageCountRef.current = currentMessageCount;
+  }, [messages.results, playIncoming]);
+  
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!conversation || !contactSessionId) {
       return;
     }
+    
+    // Mark that user has interacted
+    hasUserInteractedRef.current = true;
+    
+    // Play outgoing message sound
+    playOutgoing();
     
     // Show thinking animation
     setIsThinking(true);
@@ -137,6 +210,10 @@ export const WidgetChatScreen = () => {
         prompt: values.message,
         contactSessionId,
       });
+    } catch (error) {
+      // Play error sound if message fails
+      playError();
+      console.error('Failed to send message:', error);
     } finally {
       // Hide thinking animation after response
       setIsThinking(false);
@@ -155,13 +232,11 @@ export const WidgetChatScreen = () => {
             <ArrowLeftIcon />
           </Button>
           <p>Chat</p>
+          {showNotificationPing && (
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          )}
         </div>
-        <Button
-          size="icon"
-          variant="ghost"
-        >
-          <MenuIcon />
-        </Button>
+        <NotificationSettings />
       </WidgetHeader>
       <AIConversation>
         <AIConversationContent>

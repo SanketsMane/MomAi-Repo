@@ -30,7 +30,7 @@ export const WidgetView = ({ organizationId }: Props) => {
   }
 
   return (
-    <main className="flex h-full w-full flex-col overflow-hidden rounded-xl border bg-muted">
+    <main className="flex h-screen w-full max-w-md mx-auto flex-col overflow-hidden rounded-xl border bg-white shadow-lg">
       {screenComponents[screen]}
     </main>
   );

@@ -42,8 +42,8 @@ export default function DashboardPage() {
   const isAdmin = membership?.role === "org:admin";
 
   return (
-    <div className="bg-muted p-8">
-      <div className="container mx-auto space-y-6">
+    <div className="bg-muted min-h-full">
+      <div className="container mx-auto space-y-6 p-4">
         {/* Header */}
         <div>
           <h1 className="text-2xl md:text-4xl font-bold">MOM AI Dashboard</h1>
