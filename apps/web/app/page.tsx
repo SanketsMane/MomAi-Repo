@@ -10,7 +10,7 @@ import {
 function HeroGeometricDemo() {
   return (
     <HeroGeometric
-      badge="MoM AI"
+      badge="MOM AI"
       title1="AI-Powered Technical"
       title2="Support System"
     />
@@ -67,10 +67,10 @@ function AboutSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            About <span className="bg-gradient-to-r from-indigo-400 to-rose-400 bg-clip-text text-transparent">MoM AI</span>
+            About <span className="bg-gradient-to-r from-indigo-400 to-rose-400 bg-clip-text text-transparent">MOM AI</span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-12">
-            MoM AI is an advanced technical support system built by MoM Digital. 
+            MOM AI is an advanced technical support system built by MOM Digital. 
             We provide intelligent customer support solutions that understand context and deliver exceptional experiences.
           </p>
           
@@ -99,7 +99,7 @@ function CTASection() {
           <span className="bg-gradient-to-r from-indigo-300 to-rose-300 bg-clip-text text-transparent"> Customer Support?</span>
         </h2>
         <p className="text-xl text-gray-200 mb-10">
-          Join businesses using MoM AI for exceptional customer experiences.
+          Join businesses using MOM AI for exceptional customer experiences.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -127,7 +127,7 @@ function Footer() {
               <div className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-rose-500 flex items-center justify-center">
                 <span className="text-white text-xs font-bold">M</span>
               </div>
-              <span className="text-white font-bold text-xl">MoM AI</span>
+              <span className="text-white font-bold text-xl">MOM AI</span>
             </div>
             <p className="text-gray-400 mb-6">
               AI-powered technical support by MoM Digital.
@@ -168,7 +168,7 @@ export default function HomePage() {
           <div className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-rose-500 flex items-center justify-center">
             <span className="text-white text-xs font-bold">M</span>
           </div>
-          <span className="text-white font-bold text-lg leading-tight">MoM AI</span>
+          <span className="text-white font-bold text-lg leading-tight">MOM AI</span>
         </div>
         <div className="flex items-center gap-4">
           <SignedOut>
