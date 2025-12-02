@@ -33,7 +33,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self' http://localhost:* https://*.momdigital.io https://*.vercel.app https://momdigital.in https://*.momdigital.in https://dashboard.momdigital.in https://*.our-custom-client-domains.com"
+            value: "frame-ancestors 'self' *.momdigital.in http://localhost:8000 http://127.0.0.1:8000"
           }
           // Note: Removed X-Frame-Options to allow iframe embedding from trusted origins
         ]
