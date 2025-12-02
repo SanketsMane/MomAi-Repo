@@ -75,7 +75,7 @@ const nextConfig = {
       },
       // CORS for font files specifically
       {
-        source: '/_next/static/media/(.*\\.(woff|woff2|ttf|otf|eot))',
+        source: '/_next/static/media/:path*',
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
