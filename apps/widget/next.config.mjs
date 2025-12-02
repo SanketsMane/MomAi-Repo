@@ -33,9 +33,62 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self' *.momdigital.in http://localhost:8000 http://127.0.0.1:8000"
+            value: "frame-ancestors 'self' *.momdigital.in https://*.momdigital.in http://localhost:8000 http://127.0.0.1:8000 http://localhost:* http://127.0.0.1:*"
+          },
+          // CORS headers for API endpoints
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'
+          },
+          {
+            key: 'Access-Control-Allow-Methods', 
+            value: 'GET, POST, PUT, DELETE, OPTIONS'
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization, X-Requested-With, Accept, Origin'
           }
           // Note: Removed X-Frame-Options to allow iframe embedding from trusted origins
+        ]
+      },
+      // Specific CORS headers for static assets (fonts, images, etc.)
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, HEAD, OPTIONS'
+          },
+          {
+            key: 'Access-Control-Allow-Headers', 
+            value: 'Content-Type, Range'
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          }
+        ]
+      },
+      // CORS for font files specifically
+      {
+        source: '/_next/static/media/(.*\\.(woff|woff2|ttf|otf|eot))',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, HEAD, OPTIONS'
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          }
         ]
       }
     ]
