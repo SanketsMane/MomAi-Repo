@@ -204,3 +204,40 @@ Desktop.ini
 .env
 .env.*
 *.env
+
+# Build artifacts
+.turbo/
+.next/
+dist/
+build/
+*.tar.gz
+*.tgz
+
+# Dependencies
+node_modules/
+
+# Cache directories
+.cache/
+tmp/
+temp/
+
+# Environment files
+.env.local
+.env.production.local
+.env.development.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
