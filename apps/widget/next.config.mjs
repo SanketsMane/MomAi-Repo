@@ -33,7 +33,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self' *.momdigital.in https://*.momdigital.in http://*.momdigital.in http://localhost:* http://127.0.0.1:* https://*.ngrok.io http://*.ngrok.io https://*.ngrok-free.app"
+            value: "frame-ancestors 'self' *.momdigital.in https://*.momdigital.in http://*.momdigital.in *.momdigital.io https://*.momdigital.io http://*.momdigital.io http://localhost:* http://127.0.0.1:* https://*.ngrok.io http://*.ngrok.io https://*.ngrok-free.app"
           },
           // CORS headers for API endpoints
           {
