@@ -219,7 +219,7 @@ export const useNotificationSound = (options: UseNotificationSoundOptions = {}) 
 
     return () => {
       // Cleanup blob URLs
-      Object.values(audioRefs.current).forEach(audio => {
+      Object.values(audioRefs.current).forEach((audio: HTMLAudioElement | null) => {
         if (audio?.src && audio.src.startsWith('blob:')) {
           URL.revokeObjectURL(audio.src);
         }
@@ -239,7 +239,7 @@ export const useNotificationSound = (options: UseNotificationSoundOptions = {}) 
       const playPromise = audio.play();
       
       if (playPromise !== undefined) {
-        playPromise.catch(error => {
+        playPromise.catch((error: any) => {
           console.warn('Could not play notification sound:', error);
         });
       }

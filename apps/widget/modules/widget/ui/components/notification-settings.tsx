@@ -14,14 +14,14 @@ export const NotificationSettings = ({ className }: { className?: string }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleSound = () => {
-    setNotificationSettings(prev => ({
+    setNotificationSettings((prev: any) => ({
       ...prev,
       soundEnabled: !prev.soundEnabled
     }));
   };
 
   const adjustVolume = (volume: number) => {
-    setNotificationSettings(prev => ({
+    setNotificationSettings((prev: any) => ({
       ...prev,
       volume: Math.max(0.1, Math.min(1, volume))
     }));
