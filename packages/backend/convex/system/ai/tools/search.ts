@@ -61,12 +61,6 @@ export const search = createTool({
       }
     }
 
-    // Search common knowledge base
-    const commonKBResults = await ctx.runQuery(api.public.commonKnowledgeBase.search, {
-      query: args.query,
-      limit: 3
-    });
-
     // Fallback organization search if no best result found
     const orgSearchResult: any = bestOrgResult || await rag.search(ctx, {
       namespace: orgId,
@@ -74,42 +68,43 @@ export const search = createTool({
       limit: 5,
     });
 
-    // Combine results from both sources
-    const combinedResults = {
-      orgResults: orgSearchResult,
-      commonResults: commonKBResults,
-      hasOrgResults: orgSearchResult.entries?.length > 0,
-      hasCommonResults: commonKBResults.entries?.length > 0
-    };
+    // STEP 2: Check if organization KB has meaningful results
+    const hasOrgResults = orgSearchResult.entries?.length > 0 && 
+                          orgSearchResult.text && 
+                          orgSearchResult.text.trim().length > 10; // Must have substantial content
 
-    // Prepare context from both sources
-    let contextSources: string[] = [];
-    let foundFiles: string[] = [];
+    // STEP 3: Only search common knowledge base if NO meaningful org results found
+    let commonKBResults: any = { entries: [], count: 0 };
+    let useCommonKB = false;
     
-    // Add organization-specific results
-    if (combinedResults.hasOrgResults) {
-      const orgEntries = combinedResults.orgResults.entries.slice(0, 3);
-      orgEntries.forEach((entry: any) => {
-        if (entry.title || entry.key) {
-          foundFiles.push(entry.title || entry.key);
-        }
+    if (!hasOrgResults) {
+      console.log("No organization-specific results found, searching common knowledge base as fallback...");
+      commonKBResults = await ctx.runQuery(api.public.commonKnowledgeBase.search, {
+        query: args.query,
+        limit: 5
       });
-      contextSources.push(`Organization Knowledge: ${combinedResults.orgResults.text || 'Relevant organization-specific content found.'}`);
+      useCommonKB = commonKBResults.entries?.length > 0;
+      console.log(`Common KB search found ${commonKBResults.count} results`);
+    } else {
+      console.log(`Using organization-specific results: ${orgSearchResult.entries.length} entries found`);
     }
 
-    // Add common knowledge base results  
-    if (combinedResults.hasCommonResults) {
-      const commonEntries = combinedResults.commonResults.entries.slice(0, 2);
-      commonEntries.forEach((entry: any) => {
-        foundFiles.push(`General Knowledge: ${entry.title || 'Common KB Entry'}`);
-      });
-      const commonText = commonEntries.map((entry: any) => entry.textContent || entry.text).join('\n');
-      contextSources.push(`General Knowledge: ${commonText}`);
+    // STEP 4: Prepare context with NO source information (confidentiality)
+    let contextContent = "";
+    let searchSource = ""; // For debug logging only
+    
+    if (hasOrgResults) {
+      searchSource = "Organization Knowledge Base";
+      contextContent = orgSearchResult.text;
+    } else if (useCommonKB) {
+      searchSource = "Common Knowledge Base";
+      const commonEntries = commonKBResults.entries.slice(0, 3);
+      contextContent = commonEntries.map((entry: any) => entry.textContent || entry.text).join('\n\n');
     }
 
-    const contextText: string = contextSources.length > 0 
-      ? `Found results in: ${foundFiles.join(", ")}.\n\nContent:\n${contextSources.join('\n\n')}`
-      : `No specific documents found for "${args.query}".`;
+    // Send ONLY clean content to AI (no source references, file names, or system hints)
+    const contextText: string = contextContent.trim() || 
+      `No relevant information found for "${args.query}".`;
 
     const response: any = await generateText({
       messages: [
@@ -125,14 +120,16 @@ export const search = createTool({
       model: openai.chat("gpt-4o-mini"),
     });
 
-    // Debug: Log what we found
+    // Debug: Log what we found (internal tracking only - never exposed to AI)
     console.log("Search debug:", {
       query: args.query,
-      foundFiles: foundFiles,
-      hasOrgContent: !!orgSearchResult.text,
-      hasCommonResults: commonKBResults.count > 0,
+      searchSource: searchSource,
+      hasOrgResults: hasOrgResults,
+      useCommonKB: useCommonKB,
       orgContentLength: orgSearchResult.text?.length || 0,
-      commonResultsCount: commonKBResults.count
+      commonResultsCount: commonKBResults.count || 0,
+      finalContextLength: contextText.length,
+      contextPreview: contextText.substring(0, 100) + "..."
     });
 
     await supportAgent.saveMessage(ctx, {

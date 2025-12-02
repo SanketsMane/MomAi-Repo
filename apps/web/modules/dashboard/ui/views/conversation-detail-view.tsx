@@ -1,15 +1,18 @@
 "use client";
 
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@workspace/backend/_generated/api";
 import { Id } from "@workspace/backend/_generated/dataModel";
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
-import { ArrowLeftIcon, UserIcon, MessageSquareIcon, CheckIcon } from "lucide-react";
+import { ArrowLeftIcon, UserIcon, MessageSquareIcon, CheckIcon, MonitorIcon, GlobeIcon, ClockIcon, MailIcon, MapPinIcon, SmartphoneIcon, ScreenShareIcon } from "lucide-react";
 import Link from "next/link";
 import { ConversationStatusIcon } from "@workspace/ui/components/conversation-status-icon";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@workspace/ui/components/dialog";
 
 interface ConversationDetailViewProps {
   conversationId: string;

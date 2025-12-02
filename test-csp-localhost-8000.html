@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOM AI Widget - CSP Test for localhost:8000</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        .widget-container {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 400px;
+            position: relative;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+        .test-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            margin: 15px 0;
+        }
+        code {
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 MOM AI Widget - CSP Test</h1>
+        
+        <div class="test-info">
+            <h3>Test Information</h3>
+            <p><strong>Organization ID:</strong> <code>org_36CJU8Ow83jZ1ZD4Jwc4r56Chh5</code></p>
+            <p><strong>Current URL:</strong> <code id="currentUrl">Loading...</code></p>
+            <p><strong>Expected CSP:</strong> Should allow <code>http://localhost:*</code></p>
+        </div>
+
+        <div id="cspStatus" class="status info">
+            ⏳ Testing CSP compatibility...
+        </div>
+
+        <div class="widget-container">
+            <h3>Widget Test Area</h3>
+            <p>The MOM AI Widget should load below if CSP is configured correctly:</p>
+            <div id="widgetArea">
+                <iframe 
+                    src="https://widget.momdigital.in/?org=org_36CJU8Ow83jZ1ZD4Jwc4r56Chh5" 
+                    id="widgetFrame">
+                </iframe>
+            </div>
+        </div>
+
+        <div id="testResults">
+            <h3>📊 Test Results</h3>
+            <div id="results"></div>
+        </div>
+
+        <div class="test-info">
+            <h3>🔧 Troubleshooting</h3>
+            <p>If the widget doesn't load:</p>
+            <ol>
+                <li>Open browser Developer Tools (F12)</li>
+                <li>Check Console for CSP errors</li>
+                <li>Check Network tab for blocked requests</li>
+                <li>Verify you're accessing from <code>http://localhost:8000</code></li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Display current URL
+        document.getElementById('currentUrl').textContent = window.location.href;
+        
+        // Test CSP compliance
+        function testCSP() {
+            const iframe = document.getElementById('widgetFrame');
+            const statusDiv = document.getElementById('cspStatus');
+            const resultsDiv = document.getElementById('results');
+            
+            let testResults = [];
+            
+            // Test 1: Check if we're on localhost:8000
+            const isLocalhost8000 = window.location.hostname === 'localhost' && window.location.port === '8000';
+            testResults.push({
+                test: 'URL Check',
+                result: isLocalhost8000,
+                message: isLocalhost8000 ? 'Running on localhost:8000 ✅' : 'Not on localhost:8000 ⚠️'
+            });
+            
+            // Test 2: iframe load test
+            iframe.onload = function() {
+                testResults.push({
+                    test: 'Widget Load',
+                    result: true,
+                    message: 'Widget iframe loaded successfully ✅'
+                });
+                updateResults(testResults);
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✅ SUCCESS: Widget loaded without CSP violations!';
+            };
+            
+            iframe.onerror = function() {
+                testResults.push({
+                    test: 'Widget Load',
+                    result: false,
+                    message: 'Widget iframe failed to load ❌'
+                });
+                updateResults(testResults);
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ ERROR: Widget blocked by CSP or other issue';
+            };
+            
+            // Test 3: Console error monitoring
+            const originalError = console.error;
+            console.error = function(...args) {
+                const errorMsg = args.join(' ');
+                if (errorMsg.includes('Content Security Policy') || errorMsg.includes('frame-ancestors')) {
+                    testResults.push({
+                        test: 'CSP Check',
+                        result: false,
+                        message: 'CSP violation detected in console ❌'
+                    });
+                    updateResults(testResults);
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = '❌ CSP VIOLATION: Check console for details';
+                }
+                originalError.apply(console, args);
+            };
+            
+            // Initial results
+            updateResults(testResults);
+            
+            // Timeout test
+            setTimeout(() => {
+                if (testResults.filter(r => r.test === 'Widget Load').length === 0) {
+                    testResults.push({
+                        test: 'Widget Load',
+                        result: false,
+                        message: 'Widget load timeout after 10 seconds ⏰'
+                    });
+                    updateResults(testResults);
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = '⏰ TIMEOUT: Widget did not load within 10 seconds';
+                }
+            }, 10000);
+        }
+        
+        function updateResults(results) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = results.map(r => 
+                `<div class="status ${r.result ? 'success' : 'error'}">
+                    <strong>${r.test}:</strong> ${r.message}
+                </div>`
+            ).join('');
+        }
+        
+        // Start tests when page loads
+        document.addEventListener('DOMContentLoaded', testCSP);
+        
+        // Additional widget integration test
+        function loadWidgetScript() {
+            const script = document.createElement('script');
+            script.src = 'https://widget.momdigital.in/widget.js';
+            script.setAttribute('data-organization-id', 'org_36CJU8Ow83jZ1ZD4Jwc4r56Chh5');
+            
+            script.onload = function() {
+                console.log('✅ Widget script loaded successfully');
+            };
+            
+            script.onerror = function() {
+                console.error('❌ Widget script failed to load');
+            };
+            
+            document.body.appendChild(script);
+        }
+        
+        // Uncomment to test script loading too
+        // loadWidgetScript();
+    </script>
+</body>
+</html>

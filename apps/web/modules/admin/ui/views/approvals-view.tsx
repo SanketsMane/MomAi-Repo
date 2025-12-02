@@ -64,7 +64,7 @@ export function ApprovalsView() {
   }
 
   // Filter users based on selected filter
-  const filteredUsers = allUsers.filter(user => {
+  const filteredUsers = allUsers.filter((user: any) => {
     if (filter === "all") return true;
     return user.status.toLowerCase() === filter;
   });

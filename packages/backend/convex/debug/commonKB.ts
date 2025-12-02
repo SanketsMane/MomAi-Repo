@@ -31,6 +31,22 @@ export const addTestData = mutation({
         createdAt: now,
         updatedAt: now,
         createdBy: "system-test"
+      },
+      {
+        title: "Employee Emergency Contact Management",
+        textContent: "To check employee emergency contact details: 1) Access the Employee Portal 2) Navigate to 'My Profile' section 3) Click on 'Emergency Contacts' tab 4) View or update emergency contact information including name, relationship, phone number, and email address. For managers: Use the HR Dashboard > Employee Records > Select employee > Emergency Contacts section.",
+        type: "text" as const,
+        createdAt: now,
+        updatedAt: now,
+        createdBy: "system-test"
+      },
+      {
+        title: "HR Employee Information Access",
+        textContent: "Employee information including emergency contacts can be accessed through: HR Dashboard > Employee Records > Search by name or ID > Profile tab contains personal details, Emergency Contacts tab shows emergency contact information, and Medical Information tab (if applicable). All employee data access requires proper authorization and follows data privacy guidelines.",
+        type: "text" as const,
+        createdAt: now,
+        updatedAt: now,
+        createdBy: "system-test"
       }
     ];
 

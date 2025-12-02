@@ -2,6 +2,7 @@
 .env
 .env.local
 .env*.local
+.env.production
 
 # Dependencies
 node_modules/
@@ -16,6 +17,21 @@ yarn-error.log*
 out/
 build/
 dist/
+
+# AWS and deployment files
+*.pem
+*.key
+aws-*.sh
+deploy*.sh
+*-deploy.sh
+nginx-*.conf
+ecosystem.config.js
+cloudformation-template.json
+*.pkg
+
+# System files
+.DS_Store
+Thumbs.db
 
 # Runtime data
 pids

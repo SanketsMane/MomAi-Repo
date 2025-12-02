@@ -9,9 +9,9 @@ const nextConfig = {
   // Suppress React DevTools warnings in development
   reactStrictMode: false,
   
-  // Additional experimental flags to suppress warnings
+  // Experimental features
   experimental: {
-    suppressHydrationWarning: true,
+    clientTraceMetadata: [],
   },
   
   // Webpack configuration for better stability
