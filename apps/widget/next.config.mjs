@@ -5,25 +5,12 @@ const nextConfig = {
   // Suppress React DevTools warnings in development
   reactStrictMode: false,
   
-  // Additional experimental flags
+  // Experimental features
   experimental: {
-    // Add valid experimental flags here if needed
-  },
-  
-  // Webpack configuration for better stability
-  webpack: (config, { dev }) => {
-    if (dev) {
-      config.watchOptions = {
-        poll: 1000,
-        aggregateTimeout: 300,
-      }
-      
-      // Additional dev optimizations to reduce warnings
-      config.infrastructureLogging = {
-        level: 'error',
-      }
-    }
-    return config
+    // Turbopack configuration
+    turbo: {
+      // Enable faster builds in development
+    },
   },
   
   // Security headers (allowing iframe embedding for widget)
@@ -46,7 +33,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self' http://localhost:* https://*.momdigital.io https://*.vercel.app"
+            value: "frame-ancestors 'self' http://localhost:* https://*.momdigital.io https://*.vercel.app https://momdigital.in https://*.momdigital.in https://dashboard.momdigital.in https://*.our-custom-client-domains.com"
           }
           // Note: Removed X-Frame-Options to allow iframe embedding from trusted origins
         ]
