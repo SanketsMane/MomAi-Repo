@@ -1,9 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
+  output: 'standalone',
   
-  // Suppress React DevTools warnings in development
-  reactStrictMode: false,
+  // Production optimizations
+  ...(process.env.NODE_ENV === 'production' && {
+    compress: true,
+    poweredByHeader: false,
+    generateEtags: false,
+  }),
+  
+  // Enable React strict mode in production
+  reactStrictMode: process.env.NODE_ENV === 'production',
+  
+  // Suppress searchParams warnings in development
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   
   // Experimental features
   experimental: {

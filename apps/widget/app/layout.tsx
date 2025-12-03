@@ -1,7 +1,9 @@
 import "@/lib/suppress-dev-warnings"
+import "@/lib/dev-utils"
 import { Geist, Geist_Mono } from "next/font/google"
 
 import "@workspace/ui/globals.css"
+import "../styles/widget-header.css"
 import { Providers } from "@/components/providers"
 
 const fontSans = Geist({

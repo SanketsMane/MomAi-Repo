@@ -94,7 +94,7 @@ export const WidgetAuthScreen = () => {
               <FormItem>
                 <FormControl>
                   <Input
-                    className="h-10 bg-background"
+                    className="h-10 bg-white border border-gray-200 rounded-lg"
                     placeholder="e.g. John Doe"
                     type="text"
                     {...field}
@@ -111,7 +111,7 @@ export const WidgetAuthScreen = () => {
               <FormItem>
                 <FormControl>
                   <Input
-                    className="h-10 bg-background"
+                    className="h-10 bg-white border border-gray-200 rounded-lg"
                     placeholder="e.g. john.doe@example.com"
                     type="email"
                     {...field}

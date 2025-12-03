@@ -10,7 +10,10 @@
   },
   "scripts": {
     "build": "turbo build",
+    "build:prod": "NODE_ENV=production turbo build",
     "dev": "turbo dev",
+    "start": "turbo start",
+    "start:prod": "NODE_ENV=production turbo start",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },

@@ -36,8 +36,9 @@ export const WidgetContactScreen = () => {
             variant="ghost"
             size="icon"
             onClick={() => setScreen("selection")}
+            className="text-white hover:bg-white/10"
           >
-            <ArrowLeftIcon />
+            <ArrowLeftIcon className="text-white" />
           </Button>
           <p>Contact Us</p>
         </div>
@@ -49,7 +50,7 @@ export const WidgetContactScreen = () => {
         <p className="text-muted-foreground">Available 24/7</p>
         <p className="font-bold text-2xl">{phoneNumber}</p>
       </div>
-      <div className="border-t bg-background p-4">
+      <div className="border-t border-white/10 bg-[#F8FAFC] p-4">
         <div className="flex flex-col items-center gap-y-2">
           <Button
             className="w-full"

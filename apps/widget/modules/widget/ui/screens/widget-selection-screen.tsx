@@ -84,7 +84,7 @@ export const WidgetSelectionScreen = () => {
       </WidgetHeader>
       <div className="flex flex-1 flex-col gap-y-4 p-4 overflow-y-auto">
         <Button
-          className="h-16 w-full justify-between"
+          className="h-16 w-full justify-between bg-white text-[#0A2558] border-2 border-gray-200 hover:bg-gray-50 hover:border-[#0A2558] rounded-xl transition-all duration-200 font-medium"
           variant="outline"
           onClick={() => {
             handleUserInteraction(); // Dismiss greeting popup when user starts chat
@@ -93,14 +93,14 @@ export const WidgetSelectionScreen = () => {
           disabled={isPending}
         >
           <div className="flex items-center gap-x-2">
-            <MessageSquareTextIcon className="size-4" />
+            <MessageSquareTextIcon className="size-5 text-[#0A2558]" />
             <span>Start chat</span>
           </div>
-          <ChevronRightIcon />
+          <ChevronRightIcon className="size-5 text-[#0A2558]" />
         </Button>
         {hasVapiSecrets && widgetSettings?.vapiSettings?.assistantId && (
           <Button
-            className="h-16 w-full justify-between"
+            className="h-16 w-full justify-between bg-white text-[#0A2558] border-2 border-gray-200 hover:bg-gray-50 hover:border-[#0A2558] rounded-xl transition-all duration-200 font-medium"
             variant="outline"
             onClick={() => {
               handleUserInteraction(); // Dismiss greeting popup when user starts voice call
@@ -109,15 +109,15 @@ export const WidgetSelectionScreen = () => {
             disabled={isPending}
           >
             <div className="flex items-center gap-x-2">
-              <MicIcon className="size-4" />
+              <MicIcon className="size-5 text-[#0A2558]" />
               <span>Start voice call</span>
             </div>
-            <ChevronRightIcon />
+            <ChevronRightIcon className="size-5 text-[#0A2558]" />
           </Button>
         )}
         {hasVapiSecrets && widgetSettings?.vapiSettings?.phoneNumber && (
           <Button
-            className="h-16 w-full justify-between"
+            className="h-16 w-full justify-between bg-white text-[#0A2558] border-2 border-gray-200 hover:bg-gray-50 hover:border-[#0A2558] rounded-xl transition-all duration-200 font-medium"
             variant="outline"
             onClick={() => {
               handleUserInteraction(); // Dismiss greeting popup when user opens contact
@@ -126,10 +126,10 @@ export const WidgetSelectionScreen = () => {
             disabled={isPending}
           >
             <div className="flex items-center gap-x-2">
-              <PhoneIcon className="size-4" />
+              <PhoneIcon className="size-5 text-[#0A2558]" />
               <span>Call us</span>
             </div>
-            <ChevronRightIcon />
+            <ChevronRightIcon className="size-5 text-[#0A2558]" />
           </Button>
         )}
       </div>

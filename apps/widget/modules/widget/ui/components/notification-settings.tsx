@@ -34,19 +34,19 @@ export const NotificationSettings = ({ className }: { className?: string }) => {
         size="icon"
         variant="ghost"
         onClick={toggleSound}
-        className="h-8 w-8"
+        className="h-8 w-8 text-white hover:bg-white/10"
         title={notificationSettings.soundEnabled ? "Disable notifications" : "Enable notifications"}
       >
         {notificationSettings.soundEnabled ? (
-          <Volume2 className="h-4 w-4" />
+          <Volume2 className="h-4 w-4 text-white" />
         ) : (
-          <VolumeX className="h-4 w-4" />
+          <VolumeX className="h-4 w-4 text-white" />
         )}
       </Button>
 
       {/* Expanded settings */}
       {isExpanded && (
-        <div className="flex items-center gap-2 bg-background border rounded-lg p-2 shadow-lg">
+        <div className="flex items-center gap-2 bg-white border border-white/10 rounded-xl p-2 shadow-lg">
           <span className="text-xs text-muted-foreground">Volume:</span>
           <div className="flex gap-1">
             {[0.2, 0.5, 0.8].map((vol) => (

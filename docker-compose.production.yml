@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  mom-ai-web:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+      target: web-runner
+    container_name: mom-ai-web-2.0
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    env_file:
+      - .env.production
+    restart: unless-stopped
+    networks:
+      - mom-ai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mom-ai-widget:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+      target: widget-runner
+    container_name: mom-ai-widget-2.0
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+    env_file:
+      - .env.production
+    restart: unless-stopped
+    networks:
+      - mom-ai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    container_name: mom-ai-nginx-2.0
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - mom-ai-web
+      - mom-ai-widget
+    restart: unless-stopped
+    networks:
+      - mom-ai-network
+
+networks:
+  mom-ai-network:
+    driver: bridge

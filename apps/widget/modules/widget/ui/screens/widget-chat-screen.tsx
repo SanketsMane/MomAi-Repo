@@ -228,8 +228,9 @@ export const WidgetChatScreen = () => {
             onClick={onBack}
             size="icon"
             variant="ghost"
+            className="text-white hover:bg-white/10"
           >
-            <ArrowLeftIcon />
+            <ArrowLeftIcon className="text-white" />
           </Button>
           <p>Chat</p>
           {showNotificationPing && (

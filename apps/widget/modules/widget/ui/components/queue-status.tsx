@@ -47,21 +47,21 @@ export const QueueStatus = ({ conversationId, contactSessionId }: QueueStatusPro
 
   return (
     <div className="mx-4 mb-4">
-      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mx-3 mb-3">
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
-            <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-              <Clock className="w-4 h-4 text-orange-600" />
+            <div className="w-8 h-8 bg-[#0A2558] rounded-full flex items-center justify-center">
+              <Clock className="w-4 h-4 text-white" />
             </div>
           </div>
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-medium text-orange-900">
+              <h4 className="text-sm font-medium text-[#0A2558]">
                 You&apos;re in the queue
               </h4>
-              <div className="flex items-center gap-1 text-xs text-orange-700">
-                <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+              <div className="flex items-center gap-1 text-xs text-blue-700">
+                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
                 Live Updates
               </div>
             </div>

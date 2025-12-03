@@ -1,26 +1,36 @@
-# MOM AI Deployment Guide
+# MOM AI Production Deployment Guide - 2.0_Ai Branch
 
-## Prerequisites Checklist
+## 🚀 Quick Production Deployment
+
+### Prerequisites Checklist
 Before deploying, ensure you have:
 
 - [x] EC2 instance running (3.111.199.28)
-- [ ] SSH key pair configured for EC2 access
-- [ ] Convex deployment setup (get deployment URL)
-- [ ] Clerk account setup (get API keys)
-- [ ] Domain name (optional, can use IP initially)
+- [x] SSH key pair configured for EC2 access
+- [ ] Production Convex deployment setup (get deployment URL)
+- [ ] Production Clerk account setup (get API keys)
+- [ ] Domain name (recommended for production)
 
-## Quick Deployment Steps
+## 🎯 One-Command Production Deployment
 
-### 1. Test SSH Connection
+### 1. Make deployment script executable
 ```bash
-ssh ubuntu@3.111.199.28
+chmod +x deploy-production.sh
 ```
 
-### 2. Deploy Application
-Run the advanced deployment script:
+### 2. Deploy to Production (2.0_Ai Branch)
 ```bash
-./deploy-advanced.sh
+./deploy-production.sh
 ```
+
+This automated script will:
+- ✅ Test SSH connection
+- ✅ Install required software (Node.js 20, pnpm, PM2, Nginx)
+- ✅ Clone 2.0_Ai branch from GitHub
+- ✅ Build applications in production mode
+- ✅ Configure PM2 for process management
+- ✅ Set up Nginx reverse proxy
+- ✅ Start applications automatically
 
 ### 3. Configure Environment Variables
 After deployment, SSH to your server and update the configuration:

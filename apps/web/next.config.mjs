@@ -4,10 +4,15 @@ const nextConfig = {
   transpilePackages: ["@workspace/ui"],
   devIndicators: false,
   output: 'standalone',
-  outputFileTracingRoot: '/Users/sanket/Documents/CHATBOT-MOM',
+  // Remove hardcoded path for production deployment
+  ...(process.env.NODE_ENV === 'production' && {
+    compress: true,
+    poweredByHeader: false,
+    generateEtags: false,
+  }),
   
-  // Suppress React DevTools warnings in development
-  reactStrictMode: false,
+  // Enable React strict mode in production
+  reactStrictMode: process.env.NODE_ENV === 'production',
   
   // Experimental features
   experimental: {

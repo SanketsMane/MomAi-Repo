@@ -1,0 +1,44 @@
+/* Widget Header Custom Styles with Maximum Specificity */
+header.mom-gradient-header {
+  background: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+  background-image: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+  background-color: #0A2558 !important;
+  color: white !important;
+}
+
+body header.mom-gradient-header {
+  background: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+  background-image: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+}
+
+main header.mom-gradient-header {
+  background: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+  background-image: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+}
+
+.mom-gradient-header * {
+  color: white !important;
+}
+
+/* Override any possible conflicting Tailwind classes */
+.mom-gradient-header[class*="bg-"] {
+  background: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+  background-image: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+}
+
+/* Data attribute selector with highest specificity */
+[data-gradient="true"] {
+  background: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+  background-image: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+  background-color: transparent !important;
+}
+
+header[data-gradient="true"] {
+  background: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+  background-image: linear-gradient(180deg, #0F3A7A 0%, #0A2558 100%) !important;
+}
+
+/* CSS Custom Properties approach */
+[data-gradient="true"] {
+  background: linear-gradient(180deg, var(--gradient-from, #0F3A7A) 0%, var(--gradient-to, #0A2558) 100%) !important;
+}
