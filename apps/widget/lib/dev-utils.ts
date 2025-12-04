@@ -13,7 +13,7 @@
     const originalLog = console.log;
     
     // Create aggressive filters
-    const isExtensionError = (msg) => {
+    const isExtensionError = (msg: any) => {
       const str = String(msg || '').toLowerCase();
       return (
         str.includes('searchparam') ||
@@ -60,9 +60,9 @@
     };
     
     // Override console methods that extensions might use
-    ['info', 'debug', 'trace'].forEach(method => {
-      const original = console[method];
-      console[method] = function(...args) {
+    ['info', 'debug', 'trace'].forEach((method: string) => {
+      const original = (console as any)[method];
+      (console as any)[method] = function(...args: any[]) {
         if (args.some(arg => isExtensionError(arg))) {
           return;
         }
@@ -71,7 +71,7 @@
     });
     
     // Block at window level with highest priority
-    const blockExtensionErrors = (event) => {
+    const blockExtensionErrors = (event: any) => {
       const message = String(event.message || event.reason || '').toLowerCase();
       if (isExtensionError(message) || 
           (event.filename && event.filename.includes('chrome-extension')) ||

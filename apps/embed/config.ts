@@ -1,5 +1,5 @@
 export const EMBED_CONFIG = {
-  WIDGET_URL: import.meta.env.VITE_WIDGET_URL || "http://localhost:3001",
+  WIDGET_URL: import.meta.env.VITE_WIDGET_URL || (import.meta.env.NODE_ENV === "production" ? "https://widget.momdigital.in" : "http://localhost:3002"),
   DEFAULT_ORG_ID: "org_31QtvqJKwhtvop04esLJMkmFouB",
   DEFAULT_POSITION: "bottom-right" as const,
 };

@@ -1,17 +1,13 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { WidgetView } from "@/modules/widget/ui/views/widget-view";
 
-interface Props {
-  searchParams: Promise<{
-    organizationId: string;
-  }>
-};
-
-const Page = ({ searchParams }: Props) => {
+const WidgetPageContent = () => {
   const [mounted, setMounted] = useState(false);
-  const { organizationId } = use(searchParams);
+  const searchParams = useSearchParams();
+  const organizationId = searchParams.get('organizationId') || '';
 
   useEffect(() => {
     setMounted(true);
@@ -45,6 +41,14 @@ const Page = ({ searchParams }: Props) => {
 
   return (
     <WidgetView organizationId={organizationId} />
+  );
+};
+
+const Page = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <WidgetPageContent />
+    </Suspense>
   );
 };
 

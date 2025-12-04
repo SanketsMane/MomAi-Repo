@@ -15,7 +15,16 @@
     "start": "turbo start",
     "start:prod": "NODE_ENV=production turbo start",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "deploy": "docker-compose down && docker-compose build && docker-compose up -d",
+    "deploy:ec2": "./deploy-ec2.sh production",
+    "deploy:logs": "docker-compose logs -f",
+    "deploy:stop": "docker-compose down",
+    "deploy:restart": "docker-compose restart",
+    "deploy:clean": "docker system prune -af && docker volume prune -f",
+    "ssl:generate": "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx/ssl/momdigital.in.key -out nginx/ssl/momdigital.in.crt",
+    "ec2:setup": "source ./ec2-commands.sh",
+    "ec2:help": "source ./ec2-commands.sh && ec2-help"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
