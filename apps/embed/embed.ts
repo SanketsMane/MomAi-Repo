@@ -55,7 +55,7 @@ import { chatBubbleIcon, closeIcon } from './icons';
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background: #3b82f6;
+      background: linear-gradient(180deg, #3b82f6 0%, #0b63f3 100%);
       color: white;
       border: none;
       cursor: pointer;
@@ -174,7 +174,7 @@ import { chatBubbleIcon, closeIcon } from './icons';
       }, 300);
       // Change button icon back to chat
       button.innerHTML = chatBubbleIcon;
-      button.style.background = '#3b82f6';
+      button.style.background = 'linear-gradient(180deg, #3b82f6 0%, #0b63f3 100%)';
     }
   }
   

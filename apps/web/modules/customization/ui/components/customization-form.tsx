@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import {
   Card,
@@ -61,6 +62,8 @@ export const CustomizationForm = ({
 
   const onSubmit = async (values: FormSchema) => {
     try {
+      console.log("Form submission started with values:", values);
+      
       const vapiSettings: WidgetSettings["vapiSettings"] = {
         assistantId:
           values.vapiSettings.assistantId === "none"
@@ -72,16 +75,23 @@ export const CustomizationForm = ({
             : values.vapiSettings.phoneNumber,
       };
 
+      console.log("Calling upsertWidgetSettings with:", {
+        greetMessage: values.greetMessage,
+        defaultSuggestions: values.defaultSuggestions,
+        vapiSettings,
+      });
+
       await upsertWidgetSettings({
         greetMessage: values.greetMessage,
         defaultSuggestions: values.defaultSuggestions,
         vapiSettings,
       });
 
+      console.log("Widget settings saved successfully");
       toast.success("Widget settings saved");
     } catch(error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      console.error("Error saving widget settings:", error);
+      toast.error(`Failed to save settings: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   } 
 
@@ -198,10 +208,30 @@ export const CustomizationForm = ({
           </Card>
         )}
 
-        <div className="flex justify-end">
-          <Button disabled={form.formState.isSubmitting} type="submit">
-            Save Settings
-          </Button>
+        <div className="flex justify-between items-center">
+          {/* Show form validation errors if any */}
+          {Object.keys(form.formState.errors).length > 0 && (
+            <div className="text-sm text-red-600">
+              Please fix the errors above before saving
+            </div>
+          )}
+          
+          <div className="ml-auto">
+            <Button 
+              disabled={form.formState.isSubmitting} 
+              type="submit"
+              className="min-w-[120px]"
+            >
+              {form.formState.isSubmitting ? (
+                <>
+                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save Settings"
+              )}
+            </Button>
+          </div>
         </div>
       </form>
     </Form>

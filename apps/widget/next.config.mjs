@@ -3,6 +3,12 @@ const nextConfig = {
   transpilePackages: ["@workspace/ui"],
   output: 'standalone',
   
+  // Disable SSR to prevent hydration issues
+  experimental: {
+    runtime: 'nodejs',
+    ssr: false
+  },
+  
   // Production optimizations
   ...(process.env.NODE_ENV === 'production' && {
     compress: true,

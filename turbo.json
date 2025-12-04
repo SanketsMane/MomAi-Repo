@@ -17,7 +17,8 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "env": ["NODE_ENV"]
+      "env": ["NODE_ENV"],
+      "dependsOn": []
     }
   }
 }

@@ -26,6 +26,8 @@ export const WidgetLoadingScreen = ({ organizationId }: { organizationId: string
 
   const contactSessionId = useAtomValue(contactSessionIdAtomFamily(organizationId || ""));
 
+
+
   // Step 1: Validate organization
   const validateOrganization = useAction(api.public.organizations.validate);
   useEffect(() => {
@@ -177,16 +179,24 @@ export const WidgetLoadingScreen = ({ organizationId }: { organizationId: string
 
   return (
     <>
-      <WidgetHeader>
+      <header 
+        data-gradient="true"
+        className="mom-gradient-header px-5 py-4 rounded-t-xl text-white"
+        style={{
+          background: 'linear-gradient(180deg, #3b82f6 0%, #0b63f3 100%)',
+          backgroundImage: 'linear-gradient(180deg, #3b82f6 0%, #0b63f3 100%)',
+          color: 'white'
+        }}
+      >
         <div className="flex flex-col justify-between gap-y-2 px-2 py-6 font-semibold">
-          <p className="text-3xl">
-            Hi there! 👋
+          <p className="text-2xl">
+            👋 MOM AI
           </p>
           <p className="text-lg">
-            Let&apos;s get you started
+            Hi there! Let&apos;s get you started
           </p>
         </div>
-      </WidgetHeader>
+      </header>
       <div className="flex flex-1 flex-col items-center justify-center gap-y-4 p-4 text-muted-foreground">
         <LoaderIcon className="animate-spin" />
         <p className="text-sm">

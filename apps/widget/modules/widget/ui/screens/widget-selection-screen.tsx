@@ -72,7 +72,15 @@ export const WidgetSelectionScreen = () => {
 
   return (
     <>
-      <WidgetHeader>
+      <header 
+        data-gradient="true"
+        className="mom-gradient-header px-5 py-4 rounded-t-xl text-white"
+        style={{
+          background: 'linear-gradient(180deg, #3b82f6 0%, #0b63f3 100%)',
+          backgroundImage: 'linear-gradient(180deg, #3b82f6 0%, #0b63f3 100%)',
+          color: 'white'
+        }}
+      >
         <div className="flex flex-col justify-between gap-y-2 px-2 py-6 font-semibold">
           <p className="text-2xl">
             👋 MOM AI
@@ -81,10 +89,10 @@ export const WidgetSelectionScreen = () => {
             Hi there! Let&apos;s get you started
           </p>
         </div>
-      </WidgetHeader>
+      </header>
       <div className="flex flex-1 flex-col gap-y-4 p-4 overflow-y-auto">
         <Button
-          className="h-16 w-full justify-between bg-white text-[#0A2558] border-2 border-gray-200 hover:bg-gray-50 hover:border-[#0A2558] rounded-xl transition-all duration-200 font-medium"
+          className="h-16 w-full justify-between bg-white text-blue-600 border-2 border-gray-200 hover:bg-blue-50 hover:border-blue-600 rounded-xl transition-all duration-200 font-medium"
           variant="outline"
           onClick={() => {
             handleUserInteraction(); // Dismiss greeting popup when user starts chat
@@ -93,14 +101,14 @@ export const WidgetSelectionScreen = () => {
           disabled={isPending}
         >
           <div className="flex items-center gap-x-2">
-            <MessageSquareTextIcon className="size-5 text-[#0A2558]" />
+            <MessageSquareTextIcon className="size-5 text-blue-600" />
             <span>Start chat</span>
           </div>
-          <ChevronRightIcon className="size-5 text-[#0A2558]" />
+          <ChevronRightIcon className="size-5 text-blue-600" />
         </Button>
         {hasVapiSecrets && widgetSettings?.vapiSettings?.assistantId && (
           <Button
-            className="h-16 w-full justify-between bg-white text-[#0A2558] border-2 border-gray-200 hover:bg-gray-50 hover:border-[#0A2558] rounded-xl transition-all duration-200 font-medium"
+            className="h-16 w-full justify-between bg-white text-blue-600 border-2 border-gray-200 hover:bg-blue-50 hover:border-blue-600 rounded-xl transition-all duration-200 font-medium"
             variant="outline"
             onClick={() => {
               handleUserInteraction(); // Dismiss greeting popup when user starts voice call
@@ -109,15 +117,15 @@ export const WidgetSelectionScreen = () => {
             disabled={isPending}
           >
             <div className="flex items-center gap-x-2">
-              <MicIcon className="size-5 text-[#0A2558]" />
+              <MicIcon className="size-5 text-blue-600" />
               <span>Start voice call</span>
             </div>
-            <ChevronRightIcon className="size-5 text-[#0A2558]" />
+            <ChevronRightIcon className="size-5 text-blue-600" />
           </Button>
         )}
         {hasVapiSecrets && widgetSettings?.vapiSettings?.phoneNumber && (
           <Button
-            className="h-16 w-full justify-between bg-white text-[#0A2558] border-2 border-gray-200 hover:bg-gray-50 hover:border-[#0A2558] rounded-xl transition-all duration-200 font-medium"
+            className="h-16 w-full justify-between bg-white text-blue-600 border-2 border-gray-200 hover:bg-blue-50 hover:border-blue-600 rounded-xl transition-all duration-200 font-medium"
             variant="outline"
             onClick={() => {
               handleUserInteraction(); // Dismiss greeting popup when user opens contact
@@ -126,10 +134,10 @@ export const WidgetSelectionScreen = () => {
             disabled={isPending}
           >
             <div className="flex items-center gap-x-2">
-              <PhoneIcon className="size-5 text-[#0A2558]" />
+              <PhoneIcon className="size-5 text-blue-600" />
               <span>Call us</span>
             </div>
-            <ChevronRightIcon className="size-5 text-[#0A2558]" />
+            <ChevronRightIcon className="size-5 text-blue-600" />
           </Button>
         )}
       </div>
